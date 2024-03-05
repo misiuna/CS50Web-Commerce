@@ -1,0 +1,67 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+  <h1 class="display-5">Active Listings</h1>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+
+    {% for listing in activeListings %}
+      <div class="col">
+        <div class="card h-100">
+          <img src="{{ listing.image }}" class="card-img-top" alt="{{ listing.description }}">
+          <div class="card-body">
+            <h2 class="card-title display-5">{{ listing.title }}</h2>
+            <p class="card-text">{{ listing.description }}</p>
+            {% if listing.status == "Closed" %}
+            {% elif listing.status == "Active" %}
+              <p class="card-text" style="font-size: 1.4rem; font-weight: 600;">US ${{ listing.price }}</p>
+            {% endif %}
+            <p class="card-text"><b>Category: </b>{{ listing.category }}</p>
+            <p class="card-text"><b>Status: </b>{{ listing.status }}</p>
+            {% if user.is_authenticated %}
+            <div>
+              <a href="listing/{{listing.id}}" method="GET" name="{{listing.id}}" class="btn btn-primary">View Listing</a>
+              {% for x in fullWatchlist %}
+                {% if x == listings %}
+                  <a href="{% url 'addTOwatchlist' listing.id %}" name="remove" class="btn btn-primary" > Remove from Watchlist</a>  
+                {% endif %}
+              {% endfor %}
+              {% if noWatchlist %}
+              {% else %}
+                <a href="{% url 'addTOwatchlist' listing.id %}" name="add" class="btn btn-primary" > Add to Watchlist</a>
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor  %} 
+  </div>
+
+  <hr>
+  <h1 class="display-5">Closed Listings</h1> 
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+
+    {% for listing in closedListings %}
+        <div class="col">
+          <div class="card h-100">
+            <img src="{{ listing.image }}" class="card-img-top" alt="{{ listing.description }}">
+            <div class="card-body">
+              <h2 class="card-title display-5">{{ listing.title }}</h2>
+              <p class="card-text">{{ listing.description }}</p>
+              {% if listing.status == "Closed" %}
+              {% elif listing.status == "Active" %}
+                <p class="card-text" style="font-size: 1.4rem; font-weight: 600;">US ${{ listing.price }}</p>
+              {% endif %}
+              <p class="card-text"><b>Sold for: </b>${{ listing.price }}</p>
+              <p class="card-text"><b>Category: </b>{{ listing.category }}</p>
+              <p class="card-text"><b>Status: </b>{{ listing.status }}</p>
+              <a href="listing/{{listing.id}}" method="GET" name="{{listing.id}}" class="btn btn-primary">View Listing</a>
+              
+            </div>
+          </div>
+        </div>
+
+    {% endfor  %} 
+  </div>
+{% endblock %}
